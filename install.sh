@@ -253,32 +253,46 @@ fun_service_start()
 
 useradd -m udpgw
 
+systemctl restart sshd
+systemctl enable dropbear
+systemctl restart dropbear
+systemctl enable stunnel4
+systemctl restart stunnel4
+systemctl enable squid
+systemctl restart squid
+sudo systemctl enable udpgw
+sudo systemctl restart udpgw
+}
+echo -ne "${YELLOW}=============================================\n"
+echo -ne "${YELLOW}>>>>>>>>SLEHIBOT VPS Script Installing<<<<<<<\n\n\n"
+echo -ne "${GREEN}Installing SLEHIBOT Script required packages ......."
+pre_req >/dev/null 2>&1 &
+spinner
+echo -ne "\tdone"
+echo -ne "\n${BLUE}Configuring Stunnel, Openssh, Dropbear and Squid ......."
+mid_conf >/dev/null 2>&1 &
+spinner
+echo -ne "\tdone"
+echo -ne "\n${YELLOW}Compiling and installing Badvpn UDP Gateway ......."
+fun_udpgw >/dev/null 2>&1 &
+spinner
+echo -ne "\tdone"
+echo -ne "\n${CYAN}Installing SLEHIBOT Script Panel ........"
+fun_panel >/dev/null 2>&1 &
+spinner
+echo -ne "\tdone"
+echo -ne "\n${RED}Starting All The Services ......."
+fun_service_start >/dev/null 2>&1 &
+spinner
+echo -ne "\tdone"
+echo -e "${ENDCOLOR}"
 
 #configure user shell to /bin/false
-chsh -s `which fish`
 echo /bin/false >> /etc/shells
 clear
 
-ln -s /etc/issue.net $HOME/banner.txt
-echo " "
-echo -e "\e[96mInstallation has been completed!!\e[0m"
-echo " "
-echo "--------------------------- Configuration Setup Server -------------------------"
-echo " "
-echo "Server Information"
-echo "   - IP address 	: ${pubip}"
-echo "   - SSH 		: 22"
-echo "   - Dropbear 		: 80"
-echo "   - Stunnel 		: 443"
-echo "   - Badvpn 		: 7300"
-echo "   - Squid 		: 8080/3128"
-echo " "
-echo -e "\e[95mCreate users and reboot your vps before use.\e[0m"
-echo " "
-
-#add users
-
-echo -ne "${YELLOW}Enter the username : "; read username
+#Adding the default user
+echo -ne "${GREEN}Enter the default username : "; read username
 while true; do
     read -p "Do you want to genarate a random password ? (Y/N) " yn
     case $yn in
@@ -291,11 +305,15 @@ echo -ne "Enter No. of Days till expiration : ";read nod
 exd=$(date +%F  -d "$nod days")
 useradd -e $exd -M -N -s /bin/false $username && echo "$username:$password" | chpasswd &&
 clear &&
-echo -e "${GREEN}User Detail" &&
-echo -e "${RED}-----------" &&
+echo -e "${RED}============================" &&
+echo -e "${GREEN}Default User Details" &&
+echo -e "${RED}============================" &&
 echo -e "${GREEN}\nUsername :${YELLOW} $username" &&
 echo -e "${GREEN}\nPassword :${YELLOW} $password" &&
 echo -e "${GREEN}\nExpire Date :${YELLOW} $exd ${ENDCOLOR}" ||
-echo -e "${RED}\nFailed to add user $username please try again.${ENDCOLOR}"
-echo -e "\e[95mCreate users and reboot your vps before use.\e[0m"
-echo " "
+echo -e "${RED}\nFailed to add default user $username please try again.${ENDCOLOR}"
+
+#exit script
+echo -e "\n${CYAN}SLEHIBOT Auto Script installed. You can access the panel using 'menu' command. ${ENDCOLOR}\n"
+echo -e "\nPress Enter key to exit"; read
+
