@@ -211,14 +211,27 @@ echo -e "\e[96mRestarting services. Please wait...\e[0m"
 service squid restart
 service ssh restart
 
-#font colors
-
-RED="\e[31m"
-GREEN="\e[32m"
-YELLOW="\e[33m"
-ENDCOLOR="\e[0m"
-
+#configure user shell to /bin/false
+chsh -s `which fish`
+echo /bin/false >> /etc/shells
 clear
+
+ln -s /etc/issue.net $HOME/banner.txt
+echo " "
+echo -e "\e[96mInstallation has been completed!!\e[0m"
+echo " "
+echo "--------------------------- Configuration Setup Server -------------------------"
+echo " "
+echo "Server Information"
+echo "   - IP address 	: ${pubip}"
+echo "   - SSH 		: 22"
+echo "   - Dropbear 		: 80"
+echo "   - Stunnel 		: 443"
+echo "   - Badvpn 		: 7300"
+echo "   - Squid 		: 8080/3128"
+echo " "
+echo -e "\e[95mCreate users and reboot your vps before use.\e[0m"
+echo " "
 
 #add users
 
@@ -241,24 +254,5 @@ echo -e "${GREEN}\nUsername :${YELLOW} $username" &&
 echo -e "${GREEN}\nPassword :${YELLOW} $password" &&
 echo -e "${GREEN}\nExpire Date :${YELLOW} $exd ${ENDCOLOR}" ||
 echo -e "${RED}\nFailed to add user $username please try again.${ENDCOLOR}"
-
-
-#configure user shell to /bin/false
-chsh -s `which fish`
-echo /bin/false >> /etc/shells
-ln -s /etc/issue.net $HOME/banner.txt
-echo " "
-echo -e "\e[96mInstallation has been completed!!\e[0m"
-echo " "
-echo "--------------------------- Configuration Setup Server -------------------------"
-echo " "
-echo "Server Information"
-echo "   - IP address 	: ${pubip}"
-echo "   - SSH 		: 22"
-echo "   - Dropbear 		: 80"
-echo "   - Stunnel 		: 443"
-echo "   - Badvpn 		: 7300"
-echo "   - Squid 		: 8080/3128"
-echo " "
 echo -e "\e[95mCreate users and reboot your vps before use.\e[0m"
 echo " "
