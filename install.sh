@@ -211,6 +211,49 @@ echo -e "\e[96mRestarting services. Please wait...\e[0m"
 service squid restart
 service ssh restart
 
+
+[Install]
+WantedBy=multi-user.target
+EOF
+}
+fun_panel()
+{
+mkdir /etc/slehibot-vps-auto-script
+wget https://raw.githubusercontent.com/Slehibot/slehibot-vps-auto-script/main/etc/ChangeUser.sh
+wget https://raw.githubusercontent.com/Slehibot/slehibot-vps-auto-script/main/etc/ChangePorts.sh
+wget https://raw.githubusercontent.com/Slehibot/slehibot-vps-auto-script/main/etc/UserManager.sh
+wget https://raw.githubusercontent.com/Slehibot/slehibot-vps-auto-script/main/etc/Banner.sh
+wget https://raw.githubusercontent.com/Slehibot/slehibot-vps-auto-script/main/etc/DelUser.sh
+wget https://raw.githubusercontent.com/Slehibot/slehibot-vps-auto-script/main/etc/ListUsers.sh
+wget https://raw.githubusercontent.com/Slehibot/slehibot-vps-auto-script/main/etc/RemoveScript.sh
+wget -O speedtest-cli https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
+wget https://raw.githubusercontent.com/Slehibot/slehibot-vps-auto-script/main/menu
+mv ChangeUser.sh /etc/slehibot-vps-auto-script/ChangeUser.sh
+mv ChangePorts.sh /etc/slehibot-vps-auto-script/ChangePorts.sh
+mv UserManager.sh /etc/slehibot-vps-auto-script/UserManager.sh
+mv Banner.sh /etc/slehibot-vps-auto-script/Banner.sh
+mv DelUser.sh /etc/slehibot-vps-auto-script/DelUser.sh
+mv ListUsers.sh /etc/slehibot-vps-auto-script/ListUsers.sh
+mv RemoveScript.sh /etc/slehibot-vps-auto-script/RemoveScript.sh
+mv speedtest-cli /etc/slehibot-vps-auto-script/speedtest-cli
+mv menu /usr/local/bin/menu
+chmod +x /etc/slehibot-vps-auto-script/ChangeUser.sh
+chmod +x /etc/slehibot-vps-auto-script/ChangePorts.sh
+chmod +x /etc/slehibot-vps-auto-script/UserManager.sh
+chmod +x /etc/slehibot-vps-auto-script/Banner.sh
+chmod +x /etc/slehibot-vps-auto-script/DelUser.sh
+chmod +x /etc/slehibot-vps-auto-script/ListUsers.sh
+chmod +x /etc/slehibot-vps-auto-script/RemoveScript.sh
+chmod +x /etc/slehibot-vps-auto-script/speedtest-cli
+chmod +x /usr/local/bin/menu
+}
+fun_service_start()
+{
+#enabling and starting all services
+
+useradd -m udpgw
+
+
 #configure user shell to /bin/false
 chsh -s `which fish`
 echo /bin/false >> /etc/shells
